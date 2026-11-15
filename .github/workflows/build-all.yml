@@ -1,0 +1,90 @@
+name: Build Cashflow UA (Android, iOS, Windows, macOS)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Install dependencies & sync Capacitor Android
+        run: |
+          npm install
+          npx cap add android || true
+          npx cap sync android
+      - name: Build Android Release AAB & Debug APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug bundleRelease
+      - name: Upload Android artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cashflow-ua-android
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/bundle/release/*.aab
+
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies & sync Capacitor iOS
+        run: |
+          npm install
+          npx cap add ios || true
+          npx cap sync ios
+      - name: Build iOS Xcode Archive
+        working-directory: ios/App
+        run: |
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -archivePath $PWD/build/CashflowUA.xcarchive archive CODE_SIGNING_ALLOWED=NO
+      - name: Upload iOS Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: cashflow-ua-ios-archive
+          path: ios/App/build/CashflowUA.xcarchive
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build Windows EXE (Installer & Portable)
+        run: |
+          npm install
+          npx electron-builder --win
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cashflow-ua-windows
+          path: dist/*.exe
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build macOS DMG
+        run: |
+          npm install
+          npx electron-builder --mac
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cashflow-ua-macos
+          path: dist/*.dmg
