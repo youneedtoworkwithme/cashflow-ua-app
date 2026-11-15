@@ -1,0 +1,29 @@
+{
+  "appId": "ua.cashflow.lviv",
+  "appName": "Cashflow UA",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "capacitor"
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "preferredContentMode": "mobile",
+    "backgroundColor": "#09101D"
+  },
+  "android": {
+    "backgroundColor": "#09101D",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1200,
+      "backgroundColor": "#09101D",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#09101D"
+    }
+  }
+}
