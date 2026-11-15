@@ -1,0 +1,14 @@
+{
+  "name": "Cashflow UA",
+  "short_name": "Cashflow UA",
+  "description": "Український фінансовий симулятор: нерухомість Львова, бізнеси, курси, біржа, зв'язки та Швидка доріжка.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#09101D",
+  "theme_color": "#09101D",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "../assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "../assets/icon-1024.png", "sizes": "1024x1024", "type": "image/png" }
+  ]
+}
